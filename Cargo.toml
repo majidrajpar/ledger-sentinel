@@ -1,0 +1,15 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/audit-core",
+    "crates/audit-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+authors = ["Majid Mumtaz <majidrajpar@gmail.com>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/majidrajpar/ledger-sentinel"
+description = "A zero-dependency, local-first Continuous Controls Monitoring (CCM) and forensic ledger audit engine."
+readme = "README.md"
