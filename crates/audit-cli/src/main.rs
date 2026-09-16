@@ -12,7 +12,7 @@ use audit_core::structuring::{detect_structuring, StructuringConfig};
 #[derive(Parser)]
 #[command(name = "ledger-sentinel")]
 #[command(author = "Majid Mumtaz")]
-#[command(version = "0.1.0")]
+#[command(version)]
 #[command(about = "Fast, local-first Continuous Controls Monitoring & forensic ledger audit engine", long_about = None)]
 struct Cli {
     #[command(subcommand)]
