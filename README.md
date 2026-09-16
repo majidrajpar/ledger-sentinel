@@ -26,12 +26,12 @@
 
 ## Table of Contents
 1. [The Operational Problem](#the-operational-problem)
-2. [Why `ledger-sentinel`?](#why-ledger-sentinel)
+2. [Architectural Principles](#architectural-principles)
 3. [Installation](#installation)
-   - [Option 1: Pre-compiled Release Binary (Fastest)](#option-1-pre-compiled-release-binary-fastest)
+   - [Option 1: Standalone Binary (Fastest)](#option-1-standalone-binary-fastest)
    - [Option 2: Build from Source via Cargo](#option-2-build-from-source-via-cargo)
-4. [Quick Start Tutorial](#quick-start-tutorial)
-5. [CLI Commands & Usage](#cli-commands--usage)
+4. [Quickstart & Verification](#quickstart--verification)
+5. [CLI Command Reference](#cli-command-reference)
    - [Full Population Audit (`scan`)](#1-full-population-audit-scan)
    - [Nigrini-Grade Benford's Law (`benford`)](#2-nigrini-grade-benfords-law-benford)
    - [Split Purchase Order Structuring (`structuring`)](#3-split-purchase-order-structuring-structuring)
@@ -56,18 +56,18 @@ In an enterprise processing 5,000,000 journal entries and vendor disbursements a
 
 ---
 
-## Why `ledger-sentinel`?
+## Architectural Principles
 
 1. **100% Population Telemetry:** Replaces 20-invoice samples with continuous, algorithmic evaluation of every line item in your ERP or accounting ledger.
 2. **Zero Cloud Egress (The Privacy Mandate):** Financial ledgers, employee payroll records, and vendor disbursement registers cannot legally or ethically be uploaded to third-party cloud SaaS platforms or public AI APIs. `ledger-sentinel` is a compiled native binary that executes **100% locally on your workstation**.
 3. **Operational Noise Dampening:** Mathematical tests like Benford's Law and duplicate string matching fail in practice because naive implementations cause alert fatigue. `ledger-sentinel` introduces domain-specific eligibility gates and clustering windows that filter out routine business operations.
-4. **Streaming Architecture:** Employs a low-memory streaming parser capable of chewing through 10-million-row exports on a standard laptop without memory exhaustion.
+4. **Streaming Architecture:** Employs a low-memory streaming parser capable of evaluating multi-million row ledger extracts in constant memory without heap bloat or disk spillover.
 
 ---
 
 ## Installation
 
-### Option 1: Pre-compiled Release Binary (Fastest)
+### Option 1: Standalone Binary (Fastest)
 
 Download the standalone executable directly from the [GitHub Releases](https://github.com/majidrajpar/ledger-sentinel/releases) page for your operating system:
 
@@ -114,7 +114,7 @@ ledger-sentinel --version
 
 ---
 
-## Quick Start Tutorial
+## Quickstart & Verification
 
 The repository includes a synthetic test ledger (`data/sample_ledger.csv`) containing 2,009 transactions seeded with realistic operational fraud patterns.
 
@@ -127,7 +127,7 @@ The terminal will render an executive risk summary, a breakdown of violations by
 
 ---
 
-## CLI Commands & Usage
+## CLI Command Reference
 
 ### 1. Full Population Audit (`scan`)
 Executes all five forensic rules across the entire dataset in a single streaming pass:

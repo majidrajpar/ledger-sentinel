@@ -160,23 +160,7 @@ fn main() -> ExitCode {
                     })).unwrap());
                 }
                 OutputFormat::Table => {
-                    println!("\n=== BENFORD'S LAW EVALUATION ===");
-                    println!("Eligibility:       {}", if report.is_eligible { "ELIGIBLE" } else { "INELIGIBLE" });
-                    if let Some(reason) = &report.ineligibility_reason {
-                        println!("Reason:            {}", reason);
-                    }
-                    println!("Population Size:   {}", report.population_size);
-                    println!("Mean Abs Dev:      {:.4}", report.mad);
-                    println!("Conformity:        {}", report.conformity);
-                    println!("\n--- FIRST DIGIT DISTRIBUTION ---");
-                    for stat in &report.first_digits {
-                        let flag = if stat.is_anomalous { "[ANOMALOUS SPIKE]" } else { "                 " };
-                        println!(
-                            "Digit {}: Observed {:>6} ({:>5.2}%) | Expected {:>5.2}% | z-score: {:>5.2} {}",
-                            stat.digit, stat.observed_count, stat.actual_proportion * 100.0,
-                            stat.expected_proportion * 100.0, stat.z_score, flag
-                        );
-                    }
+                    display::print_benford_table(&report);
                 }
             }
             ExitCode::SUCCESS
@@ -209,14 +193,13 @@ fn main() -> ExitCode {
                     println!("{}", serde_json::to_string_pretty(&findings).unwrap());
                 }
                 OutputFormat::Table => {
-                    println!("\n=== SPLIT PURCHASE / STRUCTURING VIOLATIONS ===");
-                    println!("Threshold Limit:   ${:.2}", threshold);
-                    println!("Bracket Window:    ${:.2} - ${:.2}", threshold * (1.0 - margin), threshold);
-                    println!("Violations Found:  {}\n", findings.len());
-                    for f in &findings {
-                        println!("[{}] {} -> Exposure: ${:.2}", f.severity, f.title, f.exposure_amount);
-                        println!("     Details: {}", f.description);
-                    }
+                    let title = format!(
+                        "Structuring Analysis (Threshold: ${:.2}, Bracket: ${:.2} - ${:.2})",
+                        threshold,
+                        threshold * (1.0 - margin),
+                        threshold
+                    );
+                    display::print_findings_table(&title, &findings);
                 }
             }
             ExitCode::SUCCESS
@@ -238,12 +221,7 @@ fn main() -> ExitCode {
                     println!("{}", serde_json::to_string_pretty(&findings).unwrap());
                 }
                 OutputFormat::Table => {
-                    println!("\n=== SEGREGATION OF DUTIES (MAKER-CHECKER) BREACHES ===");
-                    println!("Violations Found:  {}\n", findings.len());
-                    for f in &findings {
-                        println!("[{}] {} | Amount: ${:.2}", f.severity, f.title, f.exposure_amount);
-                        println!("     Details: {}", f.description);
-                    }
+                    display::print_findings_table("Segregation of Duties (Maker-Checker) Violations", &findings);
                 }
             }
             ExitCode::SUCCESS
@@ -265,12 +243,7 @@ fn main() -> ExitCode {
                     println!("{}", serde_json::to_string_pretty(&findings).unwrap());
                 }
                 OutputFormat::Table => {
-                    println!("\n=== POTENTIAL DUPLICATE DISBURSEMENTS ===");
-                    println!("Violations Found:  {}\n", findings.len());
-                    for f in &findings {
-                        println!("[{}] {} | Amount: ${:.2}", f.severity, f.title, f.exposure_amount);
-                        println!("     Details: {}", f.description);
-                    }
+                    display::print_findings_table("Fuzzy Duplicate Disbursements", &findings);
                 }
             }
             ExitCode::SUCCESS
